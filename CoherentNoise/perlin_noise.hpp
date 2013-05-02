@@ -25,7 +25,7 @@ namespace noise
 			traverse_info_t traverse_info;
 			for (size_t i = 0; i < dimensions; i++)
 			{
-				auto node_coord = static_cast<space_int_t>(point[i]);
+				auto node_coord = space_int_t(point[i]);
 				auto local_coord = point[i] - node_coord;
 
 				traverse_info.min_corner_coords[i] = node_coord;
