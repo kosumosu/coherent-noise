@@ -29,9 +29,9 @@ namespace noise
 				auto local_coord = point[i] - node_coord;
 
 				traverse_info.min_corner_coords[i] = node_coord;
-				traverse_info.max_corner_coords[i] = node_coord + space_int_t(1);
+				//traverse_info.max_corner_coords[i] = node_coord + space_int_t(1);
 				traverse_info.local_coords[i] = local_coord;
-				traverse_info.inverted_local_coords[i] = space_t(1) - local_coord;
+				//traverse_info.inverted_local_coords[i] = local_coord - space_t(1);
 				traverse_info.s_curve[i] = s_curve(local_coord);
 			}
 
@@ -88,10 +88,10 @@ namespace noise
 		struct traverse_info_t
 		{
 			grid_vector min_corner_coords;
-			grid_vector max_corner_coords;
+			//grid_vector max_corner_coords;
 
 			noise_vector local_coords;
-			noise_vector inverted_local_coords;
+			//noise_vector inverted_local_coords;
 			space_t s_curve[dimensions];
 		};
 
@@ -110,14 +110,16 @@ namespace noise
 			static space_t evaluate_imp(const table_size_t perturbations[table_size], const noise_vector gradients[table_size], table_size_t perturbation,
 				const traverse_info_t & traverse_info, const TLevels & ... level_infos)
 			{
+				level_info_t left_level_info = { traverse_info.local_coords[dimension], traverse_info.min_corner_coords[dimension] };
+				level_info_t right_level_info = { traverse_info.local_coords[dimension] - space_t(1), traverse_info.min_corner_coords[dimension] + space_int_t(1) };
 
-				auto left_perturbation = perturbations[(perturbation + space_int_t(left_node_coord)) & table_mask];
-				auto right_perturbation = perturbations[(perturbation + space_int_t(left_node_coord) + space_int_t(1)) & table_mask];
+				auto left_perturbation = perturbations[(perturbation + left_level_info.node_coord) & table_mask];
+				auto right_perturbation = perturbations[(perturbation + right_level_info.node_coord) & table_mask];
 
-				auto left_value = evaluator<dimension + 1>::evaluate_imp(perturbations, gradients, left_perturbation, point, fixed_coords ..., left_node_coord);
-				auto right_value = evaluator<dimension + 1>::evaluate_imp(perturbations, gradients, right_perturbation, point, fixed_coords ..., left_node_coord + space_int_t(1));
+				auto left_value = evaluator<dimension + 1>::evaluate_imp(perturbations, gradients, left_perturbation, traverse_info, level_infos ..., left_level_info);
+				auto right_value = evaluator<dimension + 1>::evaluate_imp(perturbations, gradients, right_perturbation, traverse_info, level_infos ..., right_level_info);
 
-				auto interpolated_value = lerp(left_value, right_value, s_curve(local_position));
+				auto interpolated_value = lerp(left_value, right_value, traverse_info.s_curve[dimension]);
 				return interpolated_value;
 			}
 
@@ -137,8 +139,7 @@ namespace noise
 			static space_t evaluate_imp(const table_size_t perturbations[table_size], const noise_vector gradients[table_size], table_size_t perturbation,
 				const traverse_info_t & traverse_info, const TLevels & ... level_infos)
 			{
-				const noise_vector node_coords(fixed_coords ...);
-				const auto local_position = point - node_coords;
+				const noise_vector local_position(level_infos.local_coord ...);
 
 				auto gradient = gradients[perturbation];
 
