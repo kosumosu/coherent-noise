@@ -23,15 +23,7 @@ namespace noise
 		virtual space_t evaluate(const noise_vector & point) const override
 		{
 			traverse_info_t traverse_info;
-			for (size_t i = 0; i < dimensions; i++)
-			{
-				auto node_coord = space_int_t(noise::fast_floor<space_int_t>(point[i]));
-				auto local_coord = point[i] - node_coord;
-
-				traverse_info.min_corner_coords[i] = node_coord;
-				traverse_info.local_coords[i] = local_coord;
-				traverse_info.s_curve[i] = s_curve(local_coord);
-			}
+			init_dimension(tag<0>(), traverse_info, point);
 
 			auto sampled_value = evaluator<0>::evaluate_imp(m_perturbations, m_gradients, table_size_t(0), traverse_info);
 
@@ -95,6 +87,32 @@ namespace noise
 			space_t local_coord;
 			space_int_t node_coord;
 		};
+
+		template <size_t level>
+		struct tag { };
+
+		template <size_t DIMENSION>
+		static void init_dimension(tag<DIMENSION>, traverse_info_t & traverse_info, const noise_vector & point)
+		{
+			init_dimension_imp<DIMENSION>(traverse_info, point);
+			init_dimension(tag<DIMENSION + 1>(), traverse_info, point);
+		}
+
+		static void init_dimension(tag<dimensions - 1>, traverse_info_t & traverse_info, const noise_vector & point)
+		{
+			init_dimension_imp<dimensions - 1>(traverse_info, point);
+		}
+
+		template <size_t DIMENSION>
+		static void init_dimension_imp(traverse_info_t & traverse_info, const noise_vector & point)
+		{
+			auto node_coord = space_int_t(noise::fast_floor<space_int_t>(point[DIMENSION]));
+			auto local_coord = point[DIMENSION] - node_coord;
+
+			traverse_info.min_corner_coords[DIMENSION] = node_coord;
+			traverse_info.local_coords[DIMENSION] = local_coord;
+			traverse_info.s_curve[DIMENSION] = s_curve(local_coord);
+		}
 
 		template <size_t DIMENSION>
 		class evaluator
