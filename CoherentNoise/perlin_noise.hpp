@@ -6,7 +6,7 @@
 
 namespace noise
 {
-	template <std::size_t DIMENSIONS, typename TSpace>
+	template <std::size_t DIMENSIONS, typename TSpace, typename TIntSpace>
 	class perlin_noise : public generic_noise<DIMENSIONS, TSpace>
 	{
 	public:
@@ -25,13 +25,11 @@ namespace noise
 			traverse_info_t traverse_info;
 			for (size_t i = 0; i < dimensions; i++)
 			{
-				auto node_coord = space_int_t(point[i]);
+				auto node_coord = space_int_t(noise::fast_floor<space_int_t>(point[i]));
 				auto local_coord = point[i] - node_coord;
 
 				traverse_info.min_corner_coords[i] = node_coord;
-				//traverse_info.max_corner_coords[i] = node_coord + space_int_t(1);
 				traverse_info.local_coords[i] = local_coord;
-				//traverse_info.inverted_local_coords[i] = local_coord - space_t(1);
 				traverse_info.s_curve[i] = s_curve(local_coord);
 			}
 
@@ -42,7 +40,7 @@ namespace noise
 
 	private:
 		typedef unsigned int table_size_t;
-		typedef int space_int_t;
+		typedef TIntSpace space_int_t;
 		typedef vector<space_int_t, dimensions> grid_vector;
 
 		enum { table_size = 256, table_mask = table_size - 1 };
@@ -88,10 +86,7 @@ namespace noise
 		struct traverse_info_t
 		{
 			grid_vector min_corner_coords;
-			//grid_vector max_corner_coords;
-
 			noise_vector local_coords;
-			//noise_vector inverted_local_coords;
 			space_t s_curve[dimensions];
 		};
 

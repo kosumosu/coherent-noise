@@ -13,6 +13,8 @@
 #include <iomanip>
 
 typedef float space_t;
+typedef int space_int_t;
+
 
 int main(int argc, char * argv[])
 {
@@ -27,7 +29,7 @@ int main(int argc, char * argv[])
 
 	png::image<png::rgb_pixel> image(width, height);
 
-	noise::perlin_noise<3, space_t> noise_gen;
+	noise::perlin_noise<3, space_t, space_int_t> noise_gen;
 	noise_gen.initialize(1234);
 
 	HRTimer timer;
@@ -38,7 +40,7 @@ int main(int argc, char * argv[])
 	{
 		for (int x = 0; x < width; x++)
 		{
-			noise::vector<space_t, 3> vec(x * space_t(0.125), y * space_t(0.125), space_t(0));
+			noise::vector<space_t, 3> vec(x * space_t(0.125) - space_t(10), y * space_t(0.125) - space_t(10), space_t(0));
 			auto result = noise_gen.evaluate(vec) * space_t(0.5) + space_t(0.5);
 
 			auto image_value = static_cast<png::byte>(noise::saturate(result * space_t(255), space_t(0), space_t(255)));
