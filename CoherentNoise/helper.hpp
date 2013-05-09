@@ -31,4 +31,37 @@ namespace noise
 		static_assert(std::is_integral<TInt>::value && !std::is_same<TInt, bool>::value, "Return value must be of integral type but not bool.");
 		return float_value >= TFloat(0) ? static_cast<TInt>(float_value) : static_cast<TInt>(float_value) - TInt(1);
 	}
+
+	namespace details
+	{
+		template <size_t level>
+		struct tag { };
+
+		template<size_t FROM, size_t TO>
+		struct index_iterator
+		{
+			enum { from = FROM, to = TO };
+
+			template<typename T>
+			static void iterate(T & func)
+			{
+				iterate(tag<from>(), func);
+			}
+
+		private:
+			template<typename T, size_t INDEX>
+			static void iterate(tag<INDEX>, T & func)
+			{
+				func(INDEX);
+				iterate(tag<INDEX + 1>(), func);
+			}
+
+			template<typename T>
+			static void iterate(tag<to>, T & func)
+			{
+				func(TO);
+			}
+
+		};
+	}
 }
