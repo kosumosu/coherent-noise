@@ -23,10 +23,7 @@ namespace noise
 		template <typename TOther>
 		vector(const vector<TOther, DIMENSIONS> & other )
 		{
-			for (std::size_t i = 0; i < DIMENSIONS; i++)
-			{
-				m_elements[i] = TSpace(other[i]);
-			}
+			iterate<0, dimensions - 1>([&] (size_t i) { m_elements[i] = TSpace(other[i]); });
 		}
 
 		template <typename TFirstValue, typename ... TValues>
@@ -42,10 +39,7 @@ namespace noise
 		{
 			static_assert(sizeof ... (values) < DIMENSIONS, "Too much arguments!");
 
-			for (std::size_t i = 0; i < DIMENSIONS - sizeof ... (values); i++)
-			{
-				m_elements[i] = vec[i];
-			}
+			iterate<0, DIMENSIONS - sizeof ... (values) - 1>([&] (size_t i) { m_elements[i] = vec[i]; });
 
 			setValues(m_elements + DIMENSIONS - sizeof ... (values), values ...);
 		}

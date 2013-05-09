@@ -11,7 +11,7 @@ namespace noise
 	{
 		TSpace squared_length = TSpace(0);
 
-		details::index_iterator<0, DIMENSIONS - 1>::iterate([&] (size_t i)
+		iterate<0, DIMENSIONS - 1>([&] (size_t i)
 		{
 			squared_length += vec[i] * vec[i];
 		});
@@ -34,7 +34,7 @@ namespace noise
 
 		vector<TSpace, DIMENSIONS> result;
 
-		details::index_iterator<0, DIMENSIONS - 1>::iterate([&] (size_t i)
+		iterate<0, DIMENSIONS - 1>([&] (size_t i)
 		{
 			result[i] = vec[i] * inversed_length;
 		});
@@ -42,6 +42,7 @@ namespace noise
 		return result;
 	}
 
+	// Strangely this works faster than generic version of dot. And surprisingly generic version of dot is faster than specialization for 3D with summation using accumulator.
 	//template <typename TSpace>
 	//TSpace dot( const vector<TSpace, 3> & vec1, const vector<TSpace, 3> & vec2 )
 	//{
@@ -52,7 +53,7 @@ namespace noise
 	TSpace dot( const vector<TSpace, DIMENSIONS> & vec1, const vector<TSpace, DIMENSIONS> & vec2 )
 	{
 		TSpace product = TSpace(0);
-		details::index_iterator<0, DIMENSIONS - 1>::iterate([&] (size_t i)
+		iterate<0, DIMENSIONS - 1>([&] (size_t i)
 		{
 			product += vec1[i] * vec2[i];
 		});

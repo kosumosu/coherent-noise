@@ -32,6 +32,12 @@ namespace noise
 		return float_value >= TFloat(0) ? static_cast<TInt>(float_value) : static_cast<TInt>(float_value) - TInt(1);
 	}
 
+	template<size_t FROM, size_t TO, typename T>
+	void iterate(T & func)
+	{
+		details::index_iterator<FROM, TO>::iterate(func);
+	}
+
 	namespace details
 	{
 		template <size_t level>

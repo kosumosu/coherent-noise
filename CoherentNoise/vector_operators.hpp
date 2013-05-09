@@ -6,9 +6,7 @@ namespace noise
 	vector<TSpace, DIMENSIONS> operator *( const vector<TSpace, DIMENSIONS> & vec, const TScalar & scalar)
 	{
 		vector<TSpace, DIMENSIONS> result;
-		for (size_t i = 0; i < DIMENSIONS; i++)
-			result[i] = vec[i] * scalar;
-
+		iterate<0, DIMENSIONS - 1>([&] (size_t i) { result[i] = vec[i] * scalar; });
 		return result;
 	}
 
@@ -16,9 +14,7 @@ namespace noise
 	vector<TSpace, DIMENSIONS> operator +( const vector<TSpace, DIMENSIONS> & vec1, const vector<TSpace, DIMENSIONS> & vec2 )
 	{
 		vector<TSpace, DIMENSIONS> result;
-		for (size_t i = 0; i < DIMENSIONS; i++)
-			result[i] = vec1[i] + vec2[i];
-
+		iterate<0, DIMENSIONS - 1>([&] (size_t i) { result[i] = vec1[i] + vec2[i]; });
 		return result;
 	}
 
@@ -26,9 +22,7 @@ namespace noise
 	vector<TSpace, DIMENSIONS> operator -( const vector<TSpace, DIMENSIONS> & vec1, const vector<TSpace, DIMENSIONS> & vec2 )
 	{
 		vector<TSpace, DIMENSIONS> result;
-		for (size_t i = 0; i < DIMENSIONS; i++)
-			result[i] = vec1[i] - vec2[i];
-
+		iterate<0, DIMENSIONS - 1>([&] (size_t i) { result[i] = vec1[i] - vec2[i]; });
 		return result;
 	}
 
@@ -36,9 +30,7 @@ namespace noise
 	vector<TSpace, DIMENSIONS> operator -( const vector<TSpace, DIMENSIONS> & vec )
 	{
 		vector<TSpace, DIMENSIONS> result;
-		for (size_t i = 0; i < DIMENSIONS; i++)
-			result[i] = -vec[i];
-
+		iterate<0, DIMENSIONS - 1>([&] (size_t i) { result[i] = -vec[i]; });
 		return result;
 	}
 }
