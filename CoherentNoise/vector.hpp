@@ -37,7 +37,7 @@ namespace noise
 		template <typename ... TValues>
 		vector(const vector<TSpace, DIMENSIONS - sizeof ... (TValues)> & vec, const TValues & ... values)
 		{
-			static_assert(sizeof ... (values) < DIMENSIONS, "Too much arguments!");
+			static_assert(sizeof ... (values) < DIMENSIONS, "Too many arguments!");
 
 			iterate<0, DIMENSIONS - sizeof ... (values) - 1>([&] (size_t i) { m_elements[i] = vec[i]; });
 
