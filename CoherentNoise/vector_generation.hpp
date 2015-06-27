@@ -13,10 +13,10 @@ namespace noise
 		std::normal_distribution<TSpace> distribution;
 		vector<TSpace, DIMENSIONS> random_vector;
 
-		iterate<0, DIMENSIONS>([&] (size_t i) { random_vector[i] = distribution(random_engine); });
+		iterate<0, DIMENSIONS - 1>([&] (size_t i) { random_vector[i] = distribution(random_engine); });
 
 		// There's a possibility of zero-length vector!
-		return DIMENSIONS > 1 ? noise::normalize(random_vector) : random_vector;;
+		return DIMENSIONS > 1 ? noise::normalize(random_vector) : random_vector;
 	}
 
 }
