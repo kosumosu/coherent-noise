@@ -6,10 +6,10 @@
 namespace noise
 {
 	template <typename TArray, typename TFirst, typename ... TRest>
-	void setValues(TArray array[], const TFirst & first, const TRest & ... rest)
+	void setValues(TArray dest_array[], const TFirst & first, const TRest & ... rest)
 	{
-		array[0] = TArray(first);
-		setValues(array + 1, rest ...);
+		dest_array[0] = TArray(first);
+		setValues(dest_array + 1, rest ...);
 	}
 
 	template <typename TArray, typename TFirst>
