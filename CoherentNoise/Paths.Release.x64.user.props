@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\PROGRAMMING\LIBRARIES\libpng\libpng-1.6.17;D:\PROGRAMMING\LIBRARIES\PNG++\png++-0.2.5;$(IncludePath)</IncludePath>
+    <IncludePath>D:\PROGRAMMING\LIBRARIES\libpng\libpng-1.6.17;D:\PROGRAMMING\LIBRARIES\PNG++\pngpp_svn;$(IncludePath)</IncludePath>
     <LibraryPath>D:\PROGRAMMING\LIBRARIES\libpng\libpng-1.6.17\projects\vstudio\x64\Release Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup />
